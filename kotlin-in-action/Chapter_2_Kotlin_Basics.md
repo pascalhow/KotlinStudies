@@ -201,6 +201,7 @@ val reader = BufferedReader(StringReader("not a number"))
 readNumber(reader))
 ```
 **Output**
+
 Nothing gets printed. This is because of the return statement in the catch block meaning that the execution of the function does not continue after the catch block
 
 ```
