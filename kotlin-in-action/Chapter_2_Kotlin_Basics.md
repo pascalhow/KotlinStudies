@@ -95,6 +95,28 @@ println("fullName: ${person.fullName}")
 fullName: James Coggan
 ```
 
+Now let's convert `fullName` to a `var` so that we can assign a value to it
+
+```
+data class Person(var name: String, var lastName: String) {
+    var fullName
+        get() = "$name $lastName"
+}
+
+//  Elsewhere
+person.name = "James"
+person.lastName = "Coggan"
+person.fullName = "Kaan Mamikoglu"
+println("fullName: ${person.fullName}")
+```
+
+**Output**
+```
+fullName: James Coggan
+```
+
+The result may look surprisin but this suggests that it is always going through the getter to re-evaluate and retrieve the value of `fullName`
+
 ## 2.2 Enum and when
 Just as in Java, enums are not lists of values and you can declare properties or methods on enum classes. Note that the last enum entry is followed by `;`
 
