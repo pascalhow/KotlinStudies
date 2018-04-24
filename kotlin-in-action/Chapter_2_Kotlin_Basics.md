@@ -22,6 +22,79 @@ Person | `isMarried` | `isMarried()`<br>`setMarried()`
 ### 2.1.1 Layout: Directories and Packages
 You should not be afraid to store several classes in the same file
 
+### 2.1.2 Accessing Properties
+Kotlin automatically generates setters and getters for you so you do not have to explicitly implement them as you would in Java. 
+
+Let's look at class `Person` below:
+
+```
+data class Person(var name: String, var lastName: String)
+```
+
+You can access the properties by doing
+
+```
+val person = Person("Pascal", "How")
+val firstName = person.name
+val lastName = person.lastName
+```
+
+You can also assign new values to `name` and `lastName` to update the state of `person`
+
+```
+person.name = "James"
+person.lastName = "Coggan"
+println("firstName: ${person.name} and lastName: ${person.lastName}")
+```
+
+**Output**
+```
+firstName: James and lastName: Coggan
+```
+
+If an immutable property, `fullName` is defined in `Person`, the value of `fullName` gets assigned at the time a new `Person` object is created. 
+
+Changing the value of `name` and `lastName` will not change the value of `fullName` because the latter is declared as `val`
+
+```
+data class Person(var name: String, var lastName: String) {
+    val fullName = "$name $lastName"
+}
+
+//	Elsewhere
+val person = Person("Pascal", "How")
+person.name = "James"
+person.lastName = "Coggan"
+
+println("fullName: ${person.fullName}")
+```
+
+**Output**
+```
+fullName: Pascal How
+```
+
+However, this gets trickier when defining a custom getter to return the `fullName` such as in the example below because `get()` will evaluate the `fullName` every time
+
+```
+data class Person(var name: String, var lastName: String) {
+    val fullName
+        get() = "$name $lastName"
+}
+
+//	Elsewhere
+val person = Person("Pascal", "How")
+person.name = "James"
+person.lastName = "Coggan"
+
+println("fullName: ${person.fullName}")
+
+```
+**Output**
+```
+fullName: James Coggan
+```
+
 ## 2.2 Enum and when
 Just as in Java, enums are not lists of values and you can declare properties or methods on enum classes. Note that the last enum entry is followed by `;`
 
