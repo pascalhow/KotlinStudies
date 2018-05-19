@@ -152,14 +152,14 @@ char c = StringUtilKt.lastChar("Java")
 
 ```
 fun <T> Collection<T>.joinToString(
-    separator: String = ", ",
-    prefix: String = "",
-    postfix: String = ""
+        separator: String = ", ",
+        prefix: String = "",
+        postfix: String = ""
 ): String {
     val result = StringBuilder(prefix)
 
     for ((index, element) in this.withIndex()) {
-        if(index >0) result.append(separator) {
+        if (index > 0) result.append(separator) {
             result.append(element)
         }
     }
@@ -175,5 +175,78 @@ println(list.joinToString(separator = "; ", prefix = "(", postfix = ")"))
 
 (1; 2; 3)
 ```
+
+### 3.3.3 No Overriding For Extension Functions
+If an extension function has the same name as a member function, the member function always wins
+
+```
+fun View.showOff() = println("I'm a view!")
+fun Button.showOff() = println("I'm a button!")
+val view: View = Button()
+view.showOff()
+```
+**Output**
+```
+I'm a view!
+```
+
+Extension functions are declared outside of the class. If you look at this from a Java perspective, it makes sense because Java chooses the function the same way.
+
+```
+View view = new Button();
+ExtensionsKt.showOff(view);
+```
+**Output**
+```
+I'm a view!
+```
+
+### 3.3.4 Adding Static Extension Functions
+In Kotlin, adding static functions to a class is done via a companion object. In order to add static extension functions to a class, the companion object needs to be extended as shown in the following example:
+
+```
+enum class Breed {
+    PUG, DOBERMAN,
+    POODLE, CORGI,
+    ROTTWEILER, GERMAN_SHEPHERD
+}
+
+
+fun Dog.Companion.isGentle(breed: Breed): Boolean {
+    return when (breed) {
+        PUG, POODLE, CORGI, GERMAN_SHEPHERD -> true
+        DOBERMAN, ROTTWEILER -> false
+    }
+}
+```
+**Output**
+```
+val isGoodDog = Dog.isGentle(Breed.CORGI)
+```
+
+However, in order for this to work, the class you wish to extend must have a companion object and this is unfortunately not the case of most of the existing Android Api because they were designed with Java in mind. This means that it is currently not possible to add static extension functions to the Android Api.
+
+### 3.3.5 Extension Properties
+```
+val String.lastChar: Char
+get() = get(length - 1)
+```
+
+Similar to extension functions. Note that the getter must always be defined
+
+Accessing from Java
+
+```
+StringUtilKt.getLastChar("Java")
+```
+
+## 3.4 Working With Collections: varargs, infix calls and library support
+`vararg` - For declaration of a function taking an arbitrary number of arguments
+`infix` - For calling some one-argument functions without ceremony
+`Destructuring declarations` - For unpacking a single composite value into multiple variables
+
+### 3.4.1 Extending the Java Collections API
+
+
 
 
